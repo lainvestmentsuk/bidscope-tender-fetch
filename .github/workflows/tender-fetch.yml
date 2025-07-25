@@ -1,0 +1,24 @@
+name: Daily Tender Import
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Runs at 3:00 AM UTC daily
+  workflow_dispatch:     # Enables manual run button
+
+jobs:
+  run-tender-import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Run import script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: deno run --allow-net --allow-env functions/load-uk-tenders/index.ts
