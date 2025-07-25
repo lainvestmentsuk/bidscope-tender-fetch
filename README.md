@@ -1,0 +1,1 @@
+# bidscope-tender-fetch
